@@ -5,8 +5,8 @@
 #include "plugins/button.c"
 #include "main/menu.c"
 
-const int SCREEN_WIDTH = 900;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 Sound nextdiag;
 
 
@@ -60,6 +60,7 @@ int main()
 	InitAudioDevice();	
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "DayCare");
 	nextdiag = LoadSound("../assets/audio/sounds/chase/chase-1.wav");
+	
 	if (gameState == SELF)
 	{
 		loadMenuTextures();
@@ -101,5 +102,5 @@ int main()
 	return 0;
 
 }
-
+// all of the code from other files is called from here!
 
