@@ -7,8 +7,10 @@ typedef struct
     float x, y, width, height;
 } Button;
 
-
-
+typedef struct 
+{
+    int x, y, z, w; // Vector4 (r, g, b, a values)
+} ColorValues;
 
 
 // definitions
@@ -24,8 +26,10 @@ Texture menuBackground;
 // colors
 
 Color menuTint = {255, 255, 255, 100}; // playing around with transparency
-Color hoveredColor = {255,255,255,255};
 
+Color playCol = WHITE;
+Color creditsCol = WHITE;
+Color optionsCol = WHITE;
 // sound and music declarations 
 Music backgroundMusic;
 
@@ -44,7 +48,7 @@ void unloadAllMenuTextures()
     // textures
 
     UnloadTexture(menuBackground);
-
+    
     // fonts
     UnloadFont(menuFont);
 }
@@ -69,18 +73,25 @@ void loadMenuTextures()
 Button playButton = {
     .x = 200, 
     .y = 400,
-    .width = 85,
-    .height = 50,
+    .width = 21.5 * 4,
+    .height = 21.5,
 };
 Button creditsButton = {
     .x = 200,
     .y = 500,
-    .width = 21.5  * 7,
+    .width = 50 * 7,
     .height = 50,
 };
 
+Button optionsButton =
+{
+    .x = 200,
+    .y = 600,
+    .width = 50 * 7,
+    .height = 50
+};
 
-
+// wtf is going on
 void menuUpdate()
 {   
     UpdateMusicStream(backgroundMusic); // updates the music stream buffer with new data
@@ -93,10 +104,21 @@ void  menuDraw()
 {
 
     // drawing the texts
-    DrawTextEx(menuFont, "PLAY", (Vector2) {playButton.x, playButton.y}, 50, 2, hoveredColor);
-    DrawTextEx(menuFont, "CREDITS", (Vector2) {creditsButton.x, creditsButton.y}, 50, 1, hoveredColor);
-    // DrawTextEx(menuFont, "PLAY", (Vector2) {playButton.x, playButton.y}, 50, 2, WHITE);
-    if (hoverButton(playButton.x, playButton.y, playButton.width, playButton.height));
+    DrawTextEx(menuFont, "PLAY", (Vector2) {playButton.x, playButton.y}, 50, 1, playCol);
+    DrawTextEx(menuFont, "CREDITS", (Vector2) {creditsButton.x, creditsButton.y}, 50, 1, creditsCol);
+    
+    DrawTextEx(menuFont, "OPTIONS", (Vector2) {optionsButton.x, optionsButton.y}, 50, 2, optionsCol);
+    
+    // check if the "buttons" are hovered over 
+    if (hoverButton(playButton.x, playButton.y, playButton.width, playButton.height)) { playCol = RED;}
+    else {playCol = WHITE;}
+    
+    if (hoverButton(creditsButton.x, creditsButton.y, creditsButton.width, creditsButton.height)) {creditsCol = RED;}
+    else {creditsCol = WHITE;}
+
+    if (hoverButton(optionsButton.x, optionsButton.y, optionsButton.width, optionsButton.height)) { optionsCol = RED;}
+    else {optionsCol = WHITE;}
+    
     ClearBackground(BLACK);
     
     DrawTexture(menuBackground,0,0,menuTint); // tint the menu background to be a bit darker
@@ -106,7 +128,7 @@ void  menuDraw()
 
 void exitMenuState ()
 {
-    // this function gets called when gameState is set to one of those on the menu
+    // this function gets called when gameState is set to one of those on the menu (when we cant to change the file to PLAY, credits and settings will still haev teh music going on )
     unloadAllMenuTextures();
     unloadMenuSounds();
     
