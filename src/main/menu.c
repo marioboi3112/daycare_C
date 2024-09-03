@@ -79,16 +79,16 @@ Button playButton = {
 Button creditsButton = {
     .x = 200,
     .y = 500,
-    .width = 50 * 7,
-    .height = 50,
+    .width = 21.5 * 7,
+    .height = 21.5,
 };
 
 Button optionsButton =
 {
     .x = 200,
     .y = 600,
-    .width = 50 * 7,
-    .height = 50
+    .width = 21.5 * 7,
+    .height = 21.5
 };
 
 // wtf is going on
