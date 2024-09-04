@@ -1,7 +1,5 @@
 #include <raylib.h>
 #include <stdio.h>
-#include "main_functions.h"
-#include <time.h> // including our time library;
 #include "plugins/button.c"
 #include "main/menu.c"
 
@@ -12,7 +10,10 @@ Sound nextdiag;
 
 typedef enum {
 	TITLE, 
-	MENU, 
+	MENU,
+	PLAY_MAIN,
+	OPTIONS_MAIN,
+	CREDITS_MAIN,
 } mainState;
 mainState main_state = TITLE;
 // game functions
@@ -33,7 +34,7 @@ void titleScreen()
 	if ((int)timeElapsed == 3)
 	{
 		DrawText(titleStrings[0], SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 20, WHITE);
-		// PlaySound(nextdiag);
+		PlaySound(nextdiag);
 	}
 
 	if ((int)timeElapsed >= 5)
@@ -45,7 +46,7 @@ void titleScreen()
 	{
 		DrawText(titleStrings[2], SCREEN_WIDTH / 2 + 10, SCREEN_HEIGHT / 2 - 30, 20, WHITE);
 		if ((int) timeElapsed >= 9)
-			main_state = 1; // 1 refers to MENU
+			main_state = MENU; // 1 refers to MENU
 	}
 
 
@@ -59,13 +60,27 @@ int main()
 
 	InitAudioDevice();	
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "DayCare");
-	nextdiag = LoadSound("../assets/audio/sounds/chase/chase-1.wav");
-	
+	nextdiag = LoadSound("../assets/audio/sounds/216766__panzen__59_vhs_casette_in.wav");
+
 	if (gameState == SELF)
 	{
 		loadMenuTextures();
 		loadMenuSounds();
 	}
+	
+	
+	if (gameState == PLAY)
+	{
+		main_state = PLAY_MAIN;
+	}
+
+	if (main_state == PLAY_MAIN)
+	{
+		loadGameSounds();
+		loadGameTextures();
+		
+	}
+
 	while (!WindowShouldClose())
 	{
 			// update function
@@ -73,10 +88,12 @@ int main()
 			{
 				case (1):
 
-					// StopSound(nextdiag);
+					StopSound(nextdiag);
 					menuUpdate();
 					break;
 			} 
+			if (main_state == PLAY_MAIN) gameUpdate();
+
 			BeginDrawing();
 
 			// BeginMode2D(camera);
@@ -84,19 +101,22 @@ int main()
 
 			if (main_state == TITLE)
 				titleScreen();
-			if (main_state == 1)
+			if (main_state == MENU)
 			{
 				menuDraw();
 			}
+			if (main_state == PLAY_MAIN) {ClearBackground(BLACK); gameDraw();}
 			//if (clickButton(10,10,100,20)) puts("clicked!");
 			
 
 			EndDrawing();
-			
+			printf("main_state: %d\n", main_state);
 	}
-	
+
 	unloadAllMenuTextures();
 	unloadMenuSounds();
+	unloadGameSounds();
+	unloadGameTextures();
 	CloseAudioDevice();
 	CloseWindow();
 	return 0;
